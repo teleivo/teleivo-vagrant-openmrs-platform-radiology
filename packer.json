@@ -1,0 +1,50 @@
+{
+    "variables": {
+        "do_api_token": "{{env `DO_API_TOKEN`}}"
+    },
+    "builders": [
+        {
+            "name": "ubuntu-14.04.amd64.virtualbox",
+            "type": "virtualbox-iso",
+            "guest_os_type": "Ubuntu_64",
+            "iso_urls": [
+                            "http://releases.ubuntu.com/14.04/ubuntu-14.04-server-amd64.iso",
+                            "http://nl.releases.ubuntu.com/14.04/ubuntu-14.04-server-amd64.iso"
+            ],
+            "iso_checksum": "01545fa976c8367b4f0d59169ac4866c",
+            "iso_checksum_type": "md5",
+            "ssh_username": "vagrant",
+            "ssh_password": "vagrant",
+            "http_directory": "../http/ubuntu/",
+            "headless": true,
+            "boot_wait": "5s",
+            "boot_command": [
+                            "<esc><esc><enter><wait>",
+                            "/install/vmlinuz ",
+                            "preseed/url=http://{{.HTTPIP}}:{{.HTTPPort}}/preseed.cfg ",
+                            "debian-installer=en_US auto locale=en_US kbd-chooser/method=us ",
+                            "hostname={{.Name}} ",
+                            "fb=false debconf/frontend=noninteractive ",
+                            "keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=USA ",
+                            "keyboard-configuration/variant=USA console-setup/ask_detect=false ",
+                            "initrd=/install/initrd.gz -- <enter>"
+            ],
+            "shutdown_command": "echo 'vagrant' | sudo -S -E shutdown -P now",
+            "hard_drive_interface": "sata"
+        },
+        {
+            "type": "digitalocean",
+            "api_token": "{{user `do_api_token`}}",
+            "image": "ubuntu-14-04-x64",
+            "droplet_name": "openmrsradiology",
+            "region": "ams2",
+            "size": "2gb"
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "shell",
+            "script": "bootstrap.sh"
+        }
+    ]
+}
