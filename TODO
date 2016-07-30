@@ -2,5 +2,4 @@
 * add demo data for openmrs and radiology module
 * make virtualbox packer entry
 * find a way to use CATALINA_HOME var in CMD of tomcat
-* improve deployment of modules (to remove them from here)
 
